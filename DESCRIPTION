@@ -1,11 +1,12 @@
 Package: clusterNet
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Title: Consensus-based approach to clustering network features and determing subnetworks within the data
+Version: 1.0.0
+Author: c(person("Patsalis", "Chris", email="patsalis@umich.edu", role = c("aut","ctb")),
+          person("Iyer", "Gayatri", email="griyer@umich.edu", role = "ctb")
+Maintainer: Chris Patsalis <patsalis@umich.edu>
+Description: Utilizes the consensus clustering algorithm described in Iyer et al. to determine subnetworks within
+             a data driven network. The focus of this package is -omics data, primarily metabolomics and lipidomics.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
