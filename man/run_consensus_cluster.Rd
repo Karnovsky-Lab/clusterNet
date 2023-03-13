@@ -6,21 +6,23 @@
 \usage{
 run_consensus_cluster(
   adjacency_graph,
+  tau,
   num_iterations = 10,
-  tau = 0.5,
-  maxIter = 5
+  maxIter = 5,
+  main.seed
 )
 }
 \arguments{
+\item{adjacency_graph}{graph An adjacency matrix of the determined network.}
+
 \item{tau}{The consensus probabilty threshold for agreement among clustering runs}
 
-\item{maxIter}{Maximum number of iterations to perform}
+\item{num_iterations}{The total number of iterations to perform.}
 
-\item{graph}{An adjacency matrix of the determined network}
+\item{maxIter}{Maximum number of iterations to perform.}
 
-\item{K}{The number of iterations for clustering. This parameter is not necessary for default "ensemble"}
-
-\item{method}{The method to use for consensus cluster}
+\item{main.seed}{An integer to set seed for clustering. This parameter ensures reproduciblity and can be
+kept as default.}
 }
 \value{
 Sub-network determinations for the nodes within the input network

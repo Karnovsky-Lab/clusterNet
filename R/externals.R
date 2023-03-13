@@ -7,10 +7,12 @@
 #'
 #' @param data A network file, whether it be a correlation matrix or edge list
 #' @param type a string identifying the type of input for the data parameter. **adjacency_matrix** is used for a
-#'             correlation matrix and **edge_list** is used for inputting an edge list. *(see details for additional arguments
-#'             required for each type)*
+#'             correlation matrix and **edge_list** is used for inputting an edge list.
 #' @param tau The consensus probabilty threshold for agreement among clustering algorithms
-#'
+#' @param main.seed An integer to set seed for clustering. This parameter ensures reproduciblity and can be
+#'                  kept as default.
+#' @param ... Additional arguments to be supplied to clusterNet. *Please see details for information regarding additional
+#'             required parameters for each type*
 #' @details
 #' ## Additional Parameters
 #' **weighted** *REQUIRED only for type = "adjacency_matrix"* TRUE/FALSE indicating whether the adjacency graph is weighted.
@@ -32,6 +34,7 @@
 clusterNet <- function(data,
                        type = c("adjacency_matrix", "edge_list"),
                        tau = 0.5,
+                       main.seed = 417,
                        ...){
 
 
@@ -39,7 +42,7 @@ clusterNet <- function(data,
   #**  tau must be above 0.5  **#
   ###############################
   if(tau < 0.5 | tau > 1.0) stop(paste('tau must be greater than 0.5!,
-                           Clustering results below this threshold are not reliable -',
+                                       Clustering results below this threshold are not reliable -',
                                        'Please see user documentation for more information!'))
 
   ##############################
@@ -68,7 +71,7 @@ clusterNet <- function(data,
     #create graph from adjacency matrix input
     adjacency_graph <- graph_from_adjacency_matrix(as.matrix(data), mode = "undirected",
                                                 weighted = edgeListParams$weighted)
-    V(inputNetwork)$name <- colnames(data)
+    metabNames <- V(inputNetwork)$name
 
   } else if(type == "edge_list"){
 
@@ -81,17 +84,10 @@ clusterNet <- function(data,
                            collapse = ", ")))
     }
 
-
-    #split data into igraph edgelist input (datInput) and additional data to be added to output later (datExtra)
-    datInput <- as.matrix(data[,c(edgeListParams$metaboliteA, edgeListParams$metaboliteB)])
-
-    #grab unique features in data and order for igraph
-    metabNames <- unique(c(datInput[,1], datInput[,2]))
-    metabNames <- metabNames[order(metabNames)]
-
     #create graph from edge list input
-    inputNetwork <- graph_from_edgelist(datInput, directed = FALSE)
-    V(inputNetwork)$name <- metabNames
+    inputNetwork <- graph_from_edgelist(as.matrix(data[,c(edgeListParams$metaboliteA, edgeListParams$metaboliteB)]),
+                                        directed = FALSE)
+    metabNames <- V(inputNetwork)$name
 
   }
 
@@ -110,20 +106,13 @@ clusterNet <- function(data,
   #** run consensus cluster algorithm **#
   #######################################
   # fit <- run_consensus_cluster(jointGraph,tau=tau0,method="ensemble", runParallel = runParallel, nCores = nCores)
-  fit <- run_consensus_cluster(inputNetwork, tau=tau)
+  fit <- run_consensus_cluster(inputNetwork, tau=tau, main.seed = main.seed)
   consensus_membership <- fit$dcl
 
   #gather results
-  subnetwork_results <- matrix(0, nrow=length(unique(consensus_membership)), length(inputNetwork))
+  subnetwork_results <- gatherConsensusMatrix(consensus_membership)
 
-  rownames(subnetwork_results) <- paste0("Subnetwork",1:length(unique(consensus_membership)))
-  for (j in 1:nrow(subnetwork_results)){
-    subnetwork_results[j,which(consensus_membership==j)] <- 1
-  }
-  if (length(which(rowSums(subnetwork_results)<5))>0){
-    subnetwork_results <- subnetwork_results[-which(rowSums(subnetwork_results)<5),]
-  }
-  npath <- nrow(subnetwork_results)
+
 
   #####################################
   #**Concatenate results for output **#
@@ -143,3 +132,4 @@ clusterNet <- function(data,
               summary = summary_stat))
 
 }
+

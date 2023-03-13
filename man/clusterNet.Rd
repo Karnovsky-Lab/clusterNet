@@ -4,16 +4,27 @@
 \alias{clusterNet}
 \title{clusterNet performs consensus clustering using an adjacency matrix for the network}
 \usage{
-clusterNet(data, type = c("adjacency_matrix", "edge_list"), tau = 0.5, ...)
+clusterNet(
+  data,
+  type = c("adjacency_matrix", "edge_list"),
+  tau = 0.5,
+  main.seed = 417,
+  ...
+)
 }
 \arguments{
 \item{data}{A network file, whether it be a correlation matrix or edge list}
 
 \item{type}{a string identifying the type of input for the data parameter. \strong{adjacency_matrix} is used for a
-correlation matrix and \strong{edge_list} is used for inputting an edge list. \emph{(see details for additional arguments
-required for each type)}}
+correlation matrix and \strong{edge_list} is used for inputting an edge list.}
 
 \item{tau}{The consensus probabilty threshold for agreement among clustering algorithms}
+
+\item{main.seed}{An integer to set seed for clustering. This parameter ensures reproduciblity and can be
+kept as default.}
+
+\item{...}{Additional arguments to be supplied to clusterNet. \emph{Please see details for information regarding additional
+required parameters for each type}}
 }
 \value{
 A list containing:
