@@ -75,6 +75,7 @@ getConsensusMatrix <- function(cl){
 #' @return Sub-network determinations for the nodes within the input network
 #'
 #' @import igraph
+#' @import progress
 #' @keywords internal
 run_consensus_cluster <- function(adjacency_graph,
                                   tau,
@@ -82,7 +83,7 @@ run_consensus_cluster <- function(adjacency_graph,
                                   maxIter=5,
                                   main.seed){
 
-  clustering_results <- list()
+  #set seed
   if(!missing(main.seed)){
 
     set.seed(main.seed)
@@ -90,20 +91,48 @@ run_consensus_cluster <- function(adjacency_graph,
     warning("Set seed to ensure reproducibility")
   }
 
+  #progress bar
+  message("Performing initial clustering..")
+  pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+                         total = 7,
+                         complete = "-",   # Completion bar character
+                         incomplete = " ", # Incomplete bar character
+                         current = ">",    # Current bar character
+                         clear = FALSE,    # If TRUE, clears the bar when finish
+                         width = 100)      # Width of the progress bar
+
+  #run clustering algorithms
+  clustering_results <- list()
   clustering_results[[1]] <- igraph::cluster_edge_betweenness(adjacency_graph, weights = NULL)
+  pb$tick()
   clustering_results[[2]] <- igraph::cluster_fast_greedy(adjacency_graph, weights = NULL)
+  pb$tick()
   clustering_results[[3]] <- igraph::cluster_infomap(adjacency_graph, e.weights = NULL)
+  pb$tick()
   clustering_results[[4]] <- igraph::cluster_label_prop(adjacency_graph, weights = NULL)
+  pb$tick()
   clustering_results[[5]] <- igraph::cluster_louvain(adjacency_graph, weights = NULL)
+  pb$tick()
   clustering_results[[6]] <- igraph::cluster_walktrap(adjacency_graph, weights = NULL)
+  pb$tick()
   clustering_results[[7]] <- tryCatch(igraph::cluster_leading_eigen(adjacency_graph, weights = NULL),
                                       error = function(some_error){
                                         message('cluster_leading_eigen() method failed and will be discarded from consensus clustering.')
                                         message('This is a known issue with a dependency and will not affect your results')
                                         return(NA)
                                       })
-
+  pb$tick()
   D <- getConsensusMatrix(clustering_results[!(is.na(clustering_results))])
+
+  #progress bar
+  message("Finding consensus among clusters..")
+  pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+                         total = 7 * maxIter,
+                         complete = "-",   # Completion bar character
+                         incomplete = " ", # Incomplete bar character
+                         current = ">",    # Current bar character
+                         clear = FALSE,    # If TRUE, clears the bar when finish
+                         width = 100)      # Width of the progress bar
 
   iter <- 0
   while(length(table(D))>1 && iter<maxIter){
@@ -124,17 +153,24 @@ run_consensus_cluster <- function(adjacency_graph,
     }
 
     dcl[[1]] <- igraph::cluster_edge_betweenness(Dgraph, weights = E(Dgraph)$weight)
+    pb$tick()
     dcl[[2]] <- igraph::cluster_fast_greedy(Dgraph, weights = E(Dgraph)$weight)
+    pb$tick()
     dcl[[3]] <- igraph::cluster_infomap(Dgraph, e.weights = E(Dgraph)$weight)
+    pb$tick()
     dcl[[4]] <- igraph::cluster_label_prop(Dgraph, weights = E(Dgraph)$weight)
+    pb$tick()
     dcl[[5]] <- igraph::cluster_louvain(Dgraph, weights = E(Dgraph)$weight)
+    pb$tick()
     dcl[[6]] <- igraph::cluster_walktrap(Dgraph, weights = E(Dgraph)$weight)
+    pb$tick()
     dcl[[7]] <- tryCatch(igraph::cluster_leading_eigen(Dgraph,weights = E(Dgraph)$weight),
                          error = function(some_error){
                            message('cluster_leading_eigen() method failed and will be discarded from consensus clustering.')
                            message('This is a known issue with the igraphf package and will not affect your results')
                            return(NA)
                          })
+    pb$tick()
     D <- getConsensusMatrix(dcl[!(is.na(dcl))])
     iter <- iter + 1
   }
