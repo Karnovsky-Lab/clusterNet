@@ -95,11 +95,12 @@ run_consensus_cluster <- function(adjacency_graph,
   message("Performing initial clustering..")
   pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
                          total = 7,
-                         complete = "-",   # Completion bar character
-                         incomplete = " ", # Incomplete bar character
-                         current = ">",    # Current bar character
-                         clear = FALSE,    # If TRUE, clears the bar when finish
-                         width = 100)      # Width of the progress bar
+                         complete = "-",
+                         incomplete = " ",
+                         current = ">",
+                         clear = FALSE,
+                         force = TRUE,
+                         width = 100)
 
   #run clustering algorithms
   clustering_results <- list()
@@ -126,13 +127,14 @@ run_consensus_cluster <- function(adjacency_graph,
 
   #progress bar
   message("Finding consensus among clusters..")
-  pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+  pb2 <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
                          total = 7 * maxIter,
-                         complete = "-",   # Completion bar character
-                         incomplete = " ", # Incomplete bar character
-                         current = ">",    # Current bar character
-                         clear = FALSE,    # If TRUE, clears the bar when finish
-                         width = 100)      # Width of the progress bar
+                         complete = "-",
+                         incomplete = " ",
+                         current = ">",
+                         clear = FALSE,
+                         force = TRUE,
+                         width = 100)
 
   iter <- 0
   while(length(table(D))>1 && iter<maxIter){
@@ -153,24 +155,25 @@ run_consensus_cluster <- function(adjacency_graph,
     }
 
     dcl[[1]] <- igraph::cluster_edge_betweenness(Dgraph, weights = E(Dgraph)$weight)
-    pb$tick()
+    pb2$tick()
     dcl[[2]] <- igraph::cluster_fast_greedy(Dgraph, weights = E(Dgraph)$weight)
-    pb$tick()
+    pb2$tick()
     dcl[[3]] <- igraph::cluster_infomap(Dgraph, e.weights = E(Dgraph)$weight)
-    pb$tick()
+    pb2$tick()
     dcl[[4]] <- igraph::cluster_label_prop(Dgraph, weights = E(Dgraph)$weight)
-    pb$tick()
+    pb2$tick()
     dcl[[5]] <- igraph::cluster_louvain(Dgraph, weights = E(Dgraph)$weight)
-    pb$tick()
+    pb2$tick()
     dcl[[6]] <- igraph::cluster_walktrap(Dgraph, weights = E(Dgraph)$weight)
-    pb$tick()
+    pb2$tick()
     dcl[[7]] <- tryCatch(igraph::cluster_leading_eigen(Dgraph,weights = E(Dgraph)$weight),
                          error = function(some_error){
                            message('cluster_leading_eigen() method failed and will be discarded from consensus clustering.')
                            message('This is a known issue with the igraphf package and will not affect your results')
                            return(NA)
                          })
-    pb$tick()
+    pb2$tick()
+
     D <- getConsensusMatrix(dcl[!(is.na(dcl))])
     iter <- iter + 1
   }

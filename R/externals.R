@@ -105,7 +105,6 @@ clusterNet <- function(data,
   #######################################
   #** run consensus cluster algorithm **#
   #######################################
-  # fit <- run_consensus_cluster(jointGraph,tau=tau0,method="ensemble", runParallel = runParallel, nCores = nCores)
   fit <- run_consensus_cluster(inputNetwork, tau=tau, main.seed = main.seed)
   consensus_membership <- fit$dcl
 
