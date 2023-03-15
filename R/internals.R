@@ -15,9 +15,6 @@ gatherConsensusMatrix <- function(consensus_membership){
   for (j in 1:nrow(subnetwork_results)){
     subnetwork_results[j,which(consensus_membership==j)] <- 1
   }
-  if (length(which(rowSums(subnetwork_results)<5))>0){
-    subnetwork_results <- subnetwork_results[-which(rowSums(subnetwork_results)<5),]
-  }
 
   return(subnetwork_results)
 }
