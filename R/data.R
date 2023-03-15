@@ -1,9 +1,9 @@
-#' The example data from the Correlation Calculator tool
+#' The example data from Iyer et al.
 #'
 #' An edge list of data from ...
 #'
-#' @format ## `correlation_data`
-#' A data frame with 741 rows and 5 columns:
+#' @format ## `ALS`
+#' A data frame with 887 rows and 5 columns:
 #' \describe{
 #'   \item{metab1}{metabolite name of first of edge pair}
 #'   \item{metab2}{metabolite name of second of edge pair}
@@ -12,5 +12,5 @@
 #'   \item{adj.pval}{The adjusted pvalue (using Benjamini-Hochberg) associated with the edge}
 #'   ...
 #' }
-#' @source <http://metscape.ncibi.org/files.html>
-"correlation_data"
+#' @source data from XXX
+"ALS"
