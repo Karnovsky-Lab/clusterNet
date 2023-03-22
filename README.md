@@ -1,5 +1,5 @@
-#Identifying Metabolic Modules within Biological networks via Consensus Clustering
-##The output for the example code here can be seen by accessing the vignette within the package. To do so, run browseVignettes("clusterNet") in the console after installing the package. 
+# Identifying Metabolic Modules within Biological networks via Consensus Clustering
+## The output for the example code here can be seen by accessing the vignette within the package. To do so, run browseVignettes("clusterNet") in the console after installing the package. 
 <font size = "4"> Gayatri Iyer, Marci Brandenburg, Christopher Patsalis, George Michailidis, Alla Karnovsky1 </font>
 
 
