@@ -30,6 +30,7 @@
 #'
 #' @import igraph
 #' @include internals.R
+#' @include utilities.R
 #' @export
 clusterNet <- function(data,
                        type = c("adjacency_matrix", "edge_list"),
@@ -69,7 +70,7 @@ clusterNet <- function(data,
     }
 
     #create graph from adjacency matrix input
-    adjacency_graph <- graph_from_adjacency_matrix(as.matrix(data), mode = "undirected",
+    inputNetwork <- graph_from_adjacency_matrix(as.matrix(data), mode = "undirected",
                                                 weighted = edgeListParams$weighted)
     metabNames <- V(inputNetwork)$name
 
@@ -111,8 +112,6 @@ clusterNet <- function(data,
   #gather results
   subnetwork_results <- gatherConsensusMatrix(consensus_membership)
 
-
-
   #####################################
   #**Concatenate results for output **#
   #####################################
@@ -124,11 +123,18 @@ clusterNet <- function(data,
                                                "number_of_edges"=length(E(cluster_c)),check.names = FALSE)
   }
 
+  #compile summary table
   summary_stat <- data.frame("Subnetworks"= rownames(subnetwork_results), do.call(rbind, summary_list), check.names = FALSE)
-  print(as.matrix(summary_stat))
 
-  return(list(subnetworks = data.frame(subnetwork = consensus_membership, row.names = metabNames),
-              summary = summary_stat))
+  #add names to consensus_membership
+  names(consensus_membership) <- metabNames
+
+  #compile output list
+  output <- list()
+  output$subnetworks <- consensus_membership
+  output$summary <- summary_stat
+  output <- newClusterNetResults(output)
+  return(output)
 
 }
 
