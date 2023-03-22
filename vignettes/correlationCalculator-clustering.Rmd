@@ -63,7 +63,7 @@ Downloading clusterNet from its [Github Repository](https://github.com/Karnovsky
 install.packages("devtools")
 
 #Download clusterNet from GitHub
-devtools::install("Karnovsky-Lab/clusterNet", build_vignettes = TRUE)
+devtools::install_github("Karnovsky-Lab/clusterNet", build_vignettes = TRUE)
 ```
 Now that the package is installed, we can load it into our environment and get started! It is a known trait of clustering algorithms that limiting the input to meaningful information often improves performance. The output of Correlation Calculator will provide values every possible network connection, or (P*(P-1)/2) connections. Therefore, we need to filter our data before consensus clustering. One way to filter is to limit the edge list to only significant connections, as defined as an adjusted p-value less than or equal to 0.1. First we can access the example ALS data and check the number of connections.
 ```{r}
