@@ -3,11 +3,10 @@
 <font size = "4"> Gayatri Iyer, Marci Brandenburg, Christopher Patsalis, George Michailidis, Alla Karnovsky1 </font>
 
 
-### The output for the example code here can be seen by accessing the vignette within the package. To do so, run browseVignettes("clusterNet") in the console after installing the package. 
-
-
-
 <h2 align="center" id="heading"><font size = 5>Special focus on clustering output from the Correlation Calculator java tool</font></h2>
+
+
+### *NOTE: The output for the example code here can be seen by accessing the vignette within the package. To do so, run browseVignettes("clusterNet") in the console after installing the package.* 
 
 <h3 align = "center" id = "heading"><font size = 4>Abstract</font></h3>
 
