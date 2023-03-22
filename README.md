@@ -1,12 +1,4 @@
-# clusterNet
----
-title: "Identifying Metabolic Modules within Biological networks via Consensus Clustering"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{correlationCalculator-clustering}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
+# "Identifying Metabolic Modules within Biological networks via Consensus Clustering"
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
