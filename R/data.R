@@ -3,7 +3,7 @@
 #' An edge list of data from ...
 #'
 #' @format ## `ALS`
-#' A data frame with 887 rows and 5 columns:
+#' A data frame with 204480 rows and 5 columns:
 #' \describe{
 #'   \item{metab1}{metabolite name of first of edge pair}
 #'   \item{metab2}{metabolite name of second of edge pair}
