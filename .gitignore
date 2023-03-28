@@ -6,3 +6,6 @@ dev.R
 clusterNet.Rproj
 **/.DS_Store
 inst/doc
+ALS_cases_349samples.output.pcor_lasso.640of640_filtered.csv
+ALS_cases_349samples.output.pcor_lasso.640of640.csv
+ALS_cluster.R

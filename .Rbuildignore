@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 dev.R
+ALS_cases_349samples.output.pcor_lasso.640of640_filtered.csv
+ALS_cases_349samples.output.pcor_lasso.640of640.csv
+ALS_cluster.R
